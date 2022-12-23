@@ -94,7 +94,7 @@ const element = document.getElementById('initial-state');
 /** @type {InitialState | undefined} */
 const initialState = element?.textContent && JSON.parse(element.textContent);
 
-// Glitch-soc-specific “local settings”
+// Glitch-YRYR-specific “local settings”
 try {
   initialState.local_settings = JSON.parse(localStorage.getItem('mastodon-settings'));
 } catch (e) {
@@ -141,7 +141,7 @@ export const version = getMeta('version');
 export const translationEnabled = getMeta('translation_enabled');
 export const languages = initialState?.languages;
 
-// Glitch-soc-specific settings
+// Glitch-YRYR-specific settings
 export const maxChars = (initialState && initialState.max_toot_chars) || 500;
 export const favouriteModal = getMeta('favourite_modal');
 export const pollLimits = (initialState && initialState.poll_limits);
