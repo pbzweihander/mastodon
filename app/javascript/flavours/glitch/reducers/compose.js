@@ -64,7 +64,7 @@ import { recoverHashtags } from 'flavours/glitch/utils/hashtag';
 const totalElefriends = 3;
 
 // ~4% chance you'll end up with an unexpected friend
-// glitch-soc/mastodon repo created_at date: 2017-04-20T21:55:28Z
+// funamitech/mastodon repo created_at date: 2017-04-20T21:55:28Z
 const glitchProbability = 1 - 0.0420215528;
 
 const initialState = ImmutableMap({
