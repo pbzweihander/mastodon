@@ -22,6 +22,7 @@ class StatusesIndex < Chewy::Index
       nori_user_dict: {
         type: 'nori_tokenizer',
         decompound_mode: 'mixed',
+      },
     },
     analyzer: {
       content: {
