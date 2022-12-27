@@ -21,7 +21,7 @@ module Mastodon
     end
 
     def suffix
-      '+YRYRc'
+      '+YRYRd'
     end
 
     def to_a
