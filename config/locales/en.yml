@@ -1693,6 +1693,7 @@ en:
     contrast: Mastodon (High contrast)
     default: Mastodon (Dark)
     mastodon-light: Mastodon (Light)
+    elephant: Elephant (Adaptive)
   time:
     formats:
       default: "%b %d, %Y, %H:%M"
