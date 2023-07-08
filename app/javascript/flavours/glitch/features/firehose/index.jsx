@@ -11,6 +11,7 @@ import { changeSetting } from 'flavours/glitch/actions/settings';
 import { connectPublicStream, connectCommunityStream } from 'flavours/glitch/actions/streaming';
 import { expandPublicTimeline, expandCommunityTimeline } from 'flavours/glitch/actions/timelines';
 import DismissableBanner from 'flavours/glitch/components/dismissable_banner';
+import SettingText from 'flavours/glitch/components/setting_text';
 import initialState, { domain } from 'flavours/glitch/initial_state';
 import { useAppDispatch, useAppSelector } from 'flavours/glitch/store';
 
@@ -21,6 +22,7 @@ import StatusListContainer from '../ui/containers/status_list_container';
 
 const messages = defineMessages({
   title: { id: 'column.firehose', defaultMessage: 'Live feeds' },
+  filter_regex: { id: 'home.column_settings.filter_regex', defaultMessage: 'Filter out by regular expressions' },
 });
 
 // TODO: use a proper React context later on
@@ -33,6 +35,7 @@ const useIdentity = () => ({
 });
 
 const ColumnSettings = () => {
+  const intl = useIntl();
   const dispatch = useAppDispatch();
   const settings = useAppSelector((state) => state.getIn(['settings', 'firehose']));
   const onChange = useCallback(
@@ -55,6 +58,13 @@ const ColumnSettings = () => {
           onChange={onChange}
           label={<FormattedMessage id='firehose.column_settings.allow_local_only' defaultMessage='Show local-only posts in "All"' />}
         />
+        <span className='column-settings__section'><FormattedMessage id='home.column_settings.advanced' defaultMessage='Advanced' /></span>
+        <SettingText
+          settings={settings}
+          settingPath={['regex', 'body']}
+          onChange={onChange}
+          label={intl.formatMessage(messages.filter_regex)}
+        />
       </div>
     </div>
   );
@@ -70,29 +80,30 @@ const Firehose = ({ feedType, multiColumn }) => {
   const hasUnread = useAppSelector((state) => state.getIn(['timelines', `${feedType}${onlyMedia ? ':media' : ''}`, 'unread'], 0) > 0);
 
   const allowLocalOnly = useAppSelector((state) => state.getIn(['settings', 'firehose', 'allowLocalOnly']));
+  const regex = useAppSelector((state) => state.getIn(['settings', 'firehose', 'regex', 'body']));
 
   const handlePin = useCallback(
     () => {
       switch(feedType) {
       case 'community':
-        dispatch(addColumn('COMMUNITY', { other: { onlyMedia } }));
+        dispatch(addColumn('COMMUNITY', { other: { onlyMedia }, regex: { body: regex } }));
         break;
       case 'public':
-        dispatch(addColumn('PUBLIC', { other: { onlyMedia, allowLocalOnly } }));
+        dispatch(addColumn('PUBLIC', { other: { onlyMedia, allowLocalOnly }, regex: { body: regex }  }));
         break;
       case 'public:remote':
-        dispatch(addColumn('REMOTE', { other: { onlyMedia, onlyRemote: true } }));
+        dispatch(addColumn('REMOTE', { other: { onlyMedia, onlyRemote: true }, regex: { body: regex }  }));
         break;
       }
     },
-    [dispatch, onlyMedia, feedType, allowLocalOnly],
+    [dispatch, onlyMedia, feedType, allowLocalOnly, regex],
   );
 
   const handleLoadMore = useCallback(
     (maxId) => {
       switch(feedType) {
       case 'community':
-        dispatch(expandCommunityTimeline({ onlyMedia }));
+        dispatch(expandCommunityTimeline({ maxId, onlyMedia }));
         break;
       case 'public':
         dispatch(expandPublicTimeline({ maxId, onlyMedia, allowLocalOnly }));
@@ -102,7 +113,7 @@ const Firehose = ({ feedType, multiColumn }) => {
         break;
       }
     },
-    [dispatch, onlyMedia, feedType],
+    [dispatch, onlyMedia, allowLocalOnly, feedType],
   );
 
   const handleHeaderClick = useCallback(() => columnRef.current?.scrollTop(), []);
@@ -132,7 +143,7 @@ const Firehose = ({ feedType, multiColumn }) => {
     }
 
     return () => disconnect?.();
-  }, [dispatch, signedIn, feedType, onlyMedia]);
+  }, [dispatch, signedIn, feedType, onlyMedia, allowLocalOnly]);
 
   const prependBanner = feedType === 'community' ? (
     <DismissableBanner id='community_timeline'>
@@ -143,12 +154,13 @@ const Firehose = ({ feedType, multiColumn }) => {
       />
     </DismissableBanner>
   ) : (
-   <DismissableBanner id='public_timeline'>
-     <FormattedMessage
-       id='dismissable_banner.public_timeline'
-       defaultMessage='These are the most recent public posts from people on this and other servers of the decentralized network that this server knows about.'
-     />
-   </DismissableBanner>
+    <DismissableBanner id='public_timeline'>
+      <FormattedMessage
+        id='dismissable_banner.public_timeline'
+        defaultMessage='These are the most recent public posts from people on the social web that people on {domain} follow.'
+        values={{ domain }}
+      />
+    </DismissableBanner>
   );
 
   const emptyMessage = feedType === 'community' ? (
@@ -157,10 +169,10 @@ const Firehose = ({ feedType, multiColumn }) => {
       defaultMessage='The local timeline is empty. Write something publicly to get the ball rolling!'
     />
   ) : (
-   <FormattedMessage
-     id='empty_column.public'
-     defaultMessage='There is nothing here! Write something publicly, or manually follow users from other servers to fill it up'
-   />
+    <FormattedMessage
+      id='empty_column.public'
+      defaultMessage='There is nothing here! Write something publicly, or manually follow users from other servers to fill it up'
+    />
   );
 
   return (
@@ -179,11 +191,11 @@ const Firehose = ({ feedType, multiColumn }) => {
       <div className='scrollable scrollable--flex'>
         <div className='account__section-headline'>
           <NavLink exact to='/public/local'>
-            <FormattedMessage tagName='div' id='firehose.local' defaultMessage='Local' />
+            <FormattedMessage tagName='div' id='firehose.local' defaultMessage='This server' />
           </NavLink>
 
           <NavLink exact to='/public/remote'>
-            <FormattedMessage tagName='div' id='firehose.remote' defaultMessage='Remote' />
+            <FormattedMessage tagName='div' id='firehose.remote' defaultMessage='Other servers' />
           </NavLink>
 
           <NavLink exact to='/public'>
@@ -193,12 +205,13 @@ const Firehose = ({ feedType, multiColumn }) => {
 
         <StatusListContainer
           prepend={prependBanner}
-          timelineId={`${feedType}${onlyMedia ? ':media' : ''}`}
+          timelineId={`${feedType}${feedType === 'public' && allowLocalOnly ? ':allow_local_only' : ''}${onlyMedia ? ':media' : ''}`}
           onLoadMore={handleLoadMore}
           trackScroll
           scrollKey='firehose'
           emptyMessage={emptyMessage}
           bindToDocument={!multiColumn}
+          regex={regex}
         />
       </div>
 
