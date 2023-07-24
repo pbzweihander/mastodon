@@ -22,6 +22,4 @@ jobs:
         ghcr.io/${{ github.repository_owner }}/mastodon
       flavor: |
         latest = true
-      tags: |
-        type=raw,pattern=${{ needs.get-current-date.outputs.DATE }}
     secrets: inherit
