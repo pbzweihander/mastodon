@@ -6,13 +6,13 @@ permissions:
   packages: write
 
 jobs:
-  get-current-time:
-    name: Get Current Time
+  get-current-date:
+    name: Get Current Date
     runs-on: ubuntu-latest
     steps:
-      - name: Get Current TIme
+      - name: Get Current Date
         id: time
-        run: echo "MY_DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
+        run: echo "DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_OUTPUT
   build-image:
     uses: ./.github/workflows/build-container-image.yml
     with:
@@ -23,5 +23,5 @@ jobs:
       flavor: |
         latest = true
       tags: |
-        type=pep440,pattern=${{ env.MY_DATE }}
+        type=pep440,pattern=${{ needs.get-current-date.outputs.DATE }}
     secrets: inherit
