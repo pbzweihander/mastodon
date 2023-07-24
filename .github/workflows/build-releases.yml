@@ -23,5 +23,5 @@ jobs:
       flavor: |
         latest = true
       tags: |
-        type=pep440,pattern=${{ needs.get-current-date.outputs.DATE }}
+        type=raw,pattern=${{ needs.get-current-date.outputs.DATE }}
     secrets: inherit
