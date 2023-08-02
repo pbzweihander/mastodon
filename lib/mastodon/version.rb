@@ -21,7 +21,7 @@ module Mastodon
     end
 
     def suffix
-      '+YRYRh'
+      '-aquariumyurigarden.0'
     end
 
     def to_a
