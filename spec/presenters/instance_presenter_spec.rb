@@ -109,7 +109,7 @@ describe InstancePresenter do
       end
 
       it 'defaults to the core glitch-soc repo URL' do
-        expect(instance_presenter.source_url).to eq('https://github.com/funamitech/mastodon')
+        expect(instance_presenter.source_url).to eq('https://github.com/pbzweihander/mastodon')
       end
     end
   end
