@@ -20,8 +20,12 @@ module Mastodon
       'beta2'
     end
 
-    def suffix
-      '+YRYRh'
+    def prerelease
+      ENV['MASTODON_VERSION_PRERELEASE'].presence || default_prerelease
+    end
+
+    def build_metadata
+      'YRYRh'
     end
 
     def to_a
