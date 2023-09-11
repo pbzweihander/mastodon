@@ -55,7 +55,7 @@ class StatusesIndex < Chewy::Index
   root date_detection: false do
     field(:id, type: 'long')
     field(:account_id, type: 'long')
-    field(:text, type: 'text', analyzer: 'nori_user_dict', value: ->(status) { status.searchable_text }) { field(:stemmed, type: 'text', analyzer: 'content') }
+    field(:text, type: 'text', analyzer: 'content', value: ->(status) { status.searchable_text }) { field(:stemmed, type: 'text', analyzer: 'content') }
     field(:tags, type: 'text', analyzer: 'hashtag',  value: ->(status) { status.tags.map(&:display_name) })
     field(:searchable_by, type: 'long', value: ->(status) { status.searchable_by })
     field(:language, type: 'keyword')
