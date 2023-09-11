@@ -28,7 +28,7 @@ pipeline {
                             if (env.BRANCH_NAME.startsWith('test-')) {
                                 env.DOCKER_TAG = 'testing'
                                 env.DOCKER_LATEST = 'false'
-                            } else if {
+                            } else if (env.BRANCH_NAME == 'main') {
                                 env.DOCKER_TAG = 'main'
                                 env.DOCKER_LATEST = 'true'
                             } else {
