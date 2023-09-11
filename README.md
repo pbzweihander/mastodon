@@ -1,14 +1,15 @@
-# Mastodon Glitch Edition
+# Mastodon YRYR-Glitch
 
-> Now with automated deploys!
+> Now with 100% more Yui Funami!
 
-[![Build Status](https://img.shields.io/circleci/project/github/funamitech/mastodon.svg)][circleci]
-[![Code Climate](https://img.shields.io/codeclimate/maintainability/funamitech/mastodon.svg)][code_climate]
+So here's the deal: assets are customized, you are on your own replacing our assets with yours (or vanilla ones)
 
-[circleci]: https://circleci.com/gh/funamitech/mastodon
-[code_climate]: https://codeclimate.com/github/funamitech/mastodon
+Added features over glitch-soc:
+- Nori tokenizer for better Korean search (You **MUST** use {Elastic,Open}Search with necessary plugins installed, otherwise search feature won't work *at all*)
+- YuruVerse assets (logos, etc)
+- Birdsite theme adapted to glitch-soc based forks
+- Pretendard font for better Korean glyphs
+- Emoji reactions! (compatible with Misskey of course)
+- And more things...?
 
-So here's the deal: we all work on this code, and anyone who uses that does so absolutely at their own risk. can you dig it?
-
-- You can view documentation for this project at [glitch-soc.github.io/docs/](https://glitch-soc.github.io/docs/).
-- And contributing guidelines are available [here](CONTRIBUTING.md) and [here](https://glitch-soc.github.io/docs/contributing/).
+We also recommend applying wide custom emoji CSS for better experience.
