@@ -25,7 +25,7 @@ module Mastodon
     end
 
     def build_metadata
-      'YRYRh'
+      'YRYRi'
     end
 
     def to_a

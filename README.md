@@ -13,3 +13,6 @@ Added features over glitch-soc:
 - And more things...?
 
 We also recommend applying wide custom emoji CSS for better experience.
+
+# Thanks to...
+- Freeplay for [mastodon-modern](https://codeberg.org/Freeplay/Mastodon-Modern/src/branch/main) theme
