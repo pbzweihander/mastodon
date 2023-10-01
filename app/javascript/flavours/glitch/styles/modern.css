@@ -652,7 +652,7 @@ a:focus-visible,
 }
 @media (min-width: 890px) {
   .columns-area__panels__main {
-    display: grid;
+    display: grid !important;
     grid-template-columns: 100%;
   }
 }
